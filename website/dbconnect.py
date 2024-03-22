@@ -4,7 +4,7 @@ db_config = {
     "user": "root",
     "password": "root",
     "host": "localhost",
-    "database": "athenai",
+    "database": "blockfund",
 }
 
 
