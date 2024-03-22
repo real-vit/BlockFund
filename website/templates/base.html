@@ -17,7 +17,9 @@
           transition: opacity 2s ease-in-out;
       }
   </style>
+
   <link rel="icon" href="../static/images/randomlogo5.png" type="image/x-icon">
+
   </head>
   <body
     class="bg-fixed bg-cover bg-center bg-no-repeat bg-black"
@@ -48,7 +50,11 @@
             class="flex title-font font-medium items-center text-white mb-4 md:mb-0"
             href="/"
           >
+          {% if current_user.is_authenticated %}
             <img src="../static/images/randomlogo5.png" class="size-14 mt-2" />
+            {% else %}
+            <div></div>
+            {% endif %}
             <span class="ml-3 text-2xl font-poppins">BlockFund</span>
           </a>
           <nav

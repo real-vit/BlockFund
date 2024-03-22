@@ -16,8 +16,8 @@ module.exports = {
           
       },
       animation: {
-        typewriter: 'typewriter 2s steps(45) forwards',
-        caret: 'typewriter 2s steps(45) forwards, blink 1s steps(4) infinite 2s',
+        typewriter: 'typewriter 2s steps(20) forwards',
+        caret: 'typewriter 2s steps(20) forwards, blink 1s steps(4) infinite 2s',
       },
       keyframes: {
         typewriter: {
