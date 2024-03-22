@@ -7,9 +7,11 @@ import ast
 
 views = Blueprint("views", __name__)
 
+
 @views.route("/")
 def home():
     return render_template("home.html", user=current_user)
+
 
 @views.route("/newfundme", methods=["GET", "POST"])
 def newfundme():
@@ -30,6 +32,7 @@ def newfundme():
         return redirect(url_for("views.projects"))
     return render_template("newfundme.html", user=current_user)
 
+
 @views.route("/projects", methods=["GET", "POST"])
 def projects():
     connection = connect_to_database()
@@ -43,6 +46,7 @@ def projects():
     connection.close()
     return render_template("projects.html", user=current_user, projects=projects)
 
+
 @views.route("myprojects", methods=["GET", "POST"])
 def myprojects():
     connection = connect_to_database()
@@ -54,6 +58,7 @@ def myprojects():
     projects = cursor.fetchall()
     connection.close()
     return render_template("myprojects.html", user=current_user, projects=projects)
+
 
 @views.route("/editfundme/<string:id>", methods=["GET", "POST"])
 def editfundme(id):
@@ -80,6 +85,7 @@ def editfundme(id):
     connection.close()
 
     return render_template("editfundme.html", user=current_user, project=project)
+
 
 @views.route("/deletefundme/<string:id>", methods=["GET", "POST"])
 def deletefundme(id):

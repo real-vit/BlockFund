@@ -2,11 +2,13 @@ from flask import Flask
 from flask_login import LoginManager, UserMixin
 from .dbconnect import connect_to_database
 
+
 class User(UserMixin):
-    def __init__(self,id,username,email):
-        self.id=id
-        self.user_name=username
+    def __init__(self, id, username, email):
+        self.id = id
+        self.user_name = username
         self.user_email = email
+
 
 def create_app():
     app = Flask(__name__)
@@ -30,7 +32,7 @@ def create_app():
         cursor.execute(query, (username,))
         user_data = cursor.fetchone()
         if user_data:
-            return User(user_data[0],user_data[0],user_data[2])
+            return User(user_data[0], user_data[0], user_data[2])
         return None
 
     return app

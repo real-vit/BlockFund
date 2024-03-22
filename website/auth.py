@@ -5,6 +5,7 @@ from website import User
 
 auth = Blueprint("auth", __name__)
 
+
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     connection = connect_to_database()
@@ -16,9 +17,9 @@ def login():
         cursor.execute(query, (email, password))
         user_data = cursor.fetchone()
         if user_data:
-            user = User(id=user_data[0],email=user_data[0],username=user_data[2])
-            login_user(user,remember=True)
-            flash("Login Success!",category="success")
+            user = User(id=user_data[0], email=user_data[0], username=user_data[2])
+            login_user(user, remember=True)
+            flash("Login Success!", category="success")
             return redirect(url_for("views.home"))
         else:
             flash("Incorrect password!", category="error")
@@ -43,11 +44,11 @@ def sign_up():
         values = (username, password, email)
         query = "INSERT INTO auth (username, pwrd, email) VALUES (%s, %s, %s)"
         cursor.execute(query, values)
-        user = User(id=username,email=email,username=username)
-        login_user(user,remember=True)
+        user = User(id=username, email=email, username=username)
+        login_user(user, remember=True)
         connection.commit()
         connection.close()
         flash("Account Created!", category="success")
 
         return redirect(url_for("views.home"))
-    return render_template("signup.html",user=current_user)
+    return render_template("signup.html", user=current_user)
