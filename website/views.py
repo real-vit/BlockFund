@@ -98,3 +98,7 @@ def deletefundme(id):
     connection.close()
     flash("Project deleted successfully!", "success")
     return redirect(url_for("views.myprojects"))
+
+@views.route("previewnft")
+def previewnft():
+    return render_template("previewnft.html", user=current_user)
