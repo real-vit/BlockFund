@@ -14,162 +14,7 @@ content %}
     referrerpolicy="no-referrer"
   ></script>
 </head>
-<!--
-<div class="sm:mx-0 lg:mx-40 md:mx-20 my-2 mx-4">
-  <h2 class="font-semibold leading-7 text-light text-4xl my-5">
-    Crowdfund Projects
-  </h2>
-  <p class="mt-1 text-sm leading-6 text-light mb-10">
-    List of published projects
-  </p>
-  <div class="grid grid-cols-3 grid-flow-row gap-3 text-light">
-    {% for project in projects %}
 
-    <div
-      class="max-w-sm bg-semi-dark bg-opacity-50 border border-gray-200 rounded-lg shadow"
-    >
-      <a href="#">
-        <img class="rounded-t-lg h-36 w-full" src="{{ project[3] }}" alt="" />
-      </a>
-      <div class="p-5">
-        <a href="#">
-          <h5
-            class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white font-poppins"
-          >
-            {{ project[1] }}
-          </h5>
-        </a>
-        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {{ project[2] }}
-        </p>
-        <h7
-          class="mb-2 text-2md font-medium tracking-tight text-light dark:text-white font-poppins"
-        >
-          Total Funding Goal: ${{ project[4] }} </h7
-        ><br /><br />
-        <script src="{{ url_for('static', filename='contract.js') }}"></script>
-        <script>
-          var accounts;
-          var myContract;
-          async function CheckMetamaskConnection() {
-            if (window.ethereum) {
-              try {
-                web3 = new Web3(window.ethereum);
-                accounts = await window.ethereum.request({
-                  method: "eth_requestAccounts",
-                });
-                console.log("Done!");
-                return true;
-              } catch (err) {
-                console.log(err);
-                return false;
-              }
-            } else {
-              console.log("Metamask Not Found!");
-              return false;
-            }
-          }
-
-          $(document).ready(async function () {
-            var IsMetaMask = await CheckMetamaskConnection();
-
-            if (IsMetaMask) {
-              console.log("IsMetaMask = true");
-              myContract = await new web3.eth.Contract(
-                SmartContractABI,
-                SmartContractAddress
-              );
-              console.log(myContract);
-              totalNFTsMinted();
-            } else {
-              alert("Metamask not detected!");
-            }
-          });
-
-          async function totalNFTsMinted() {
-            await myContract.methods.currentTokenId().call(function (err, res) {
-              if (!err) {
-                console.log(res);
-                document.getElementById("totalNFTs").innerHTML =
-                  "Total NFTs Minted : " + res;
-              }
-            });
-          }
-
-          async function GetNFT() {
-            var tokenId = document.getElementById("tokenId").value;
-
-            await myContract.methods
-              .tokenURI(tokenId)
-              .call(async function (err, res) {
-                if (!err) {
-                  console.log(res);
-                  JSONResponse = await httpGet(res);
-                  JSONResponse = JSON.parse(JSONResponse);
-                  console.log(JSONResponse);
-                  document.getElementById("nftpng").src = JSONResponse["image"];
-                  document.getElementById("nftname").innerHTML =
-                    "Name : " + JSONResponse["name"];
-                  getNFTOwner(tokenId);
-                } else {
-                  console.log(err);
-                }
-              });
-          }
-
-          async function getNFTOwner(_tokenId) {
-            await myContract.methods
-              .ownerOf(_tokenId)
-              .call(function (err, res) {
-                if (!err) {
-                  console.log(res);
-                  document.getElementById("nftowner").innerHTML =
-                    "Owner : " + res;
-                }
-              });
-          }
-
-          async function MintNFT(_tokenId) {
-            await myContract.methods
-              .mintNFT()
-              .send({ from: accounts[0] }, function (err, res) {
-                if (!err) {
-                  console.log(res);
-                } else {
-                  console.log(err);
-                }
-              });
-          }
-
-          async function TransferNFT(_tokenId) {
-            var toAddress = document.getElementById("toAddress").value;
-            var tokenId = document.getElementById("tokenId").value;
-            await myContract.methods
-              .transferFrom(accounts[0], toAddress, tokenId)
-              .send({ from: accounts[0] }, function (err, res) {
-                if (!err) {
-                  console.log(res);
-                } else {
-                  console.log(err);
-                }
-              });
-          }
-
-          function httpGet(theUrl) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false); // false for synchronous request
-            xmlHttp.send(null);
-            return xmlHttp.responseText;
-          }
-        </script>
-        <div>
-          <button class="button" onclick="MintNFT()">Fund Project!</button>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div> -->
 <div>
   <div class="mx-4 lg:mx-20">
     <h2 class="font-semibold leading-7 text-light text-4xl my-5">
@@ -181,9 +26,9 @@ content %}
   </div>
   {% for project in projects %}
   <section
-    class="text-gray-400 bg-semi-dark bg-opacity-50 body-font overflow-hidden mx-20 px-0"
+    class="text-gray-400 bg-semi-dark bg-opacity-40 body-font overflow-hidden"
   >
-    <div class="container px-0 py-6 mx-auto">
+    <div class="container px-5 py-0 mx-auto">
       <div class="lg:w-4/5 mx-auto flex flex-wrap">
         <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
           <h2 class="text-sm title-font text-gray-500 tracking-widest">
@@ -200,8 +45,8 @@ content %}
           </div>
           <p class="leading-relaxed mb-4">{{project[2]}}</p>
           <div class="flex border-t border-gray-800 py-2">
-            <span class="text-gray-500">Color</span>
-            <span class="ml-auto text-white">Blue</span>
+            <span class="text-gray-500">Posted on</span>
+            <span class="ml-auto text-white">BlockFund</span>
           </div>
           <div class="flex border-t border-gray-800 py-2">
             <span class="text-gray-500">Fund Goal</span>
@@ -209,7 +54,9 @@ content %}
           </div>
           <div class="flex border-t border-b mb-6 border-gray-800 py-2">
             <span class="text-gray-500">Amount of Matic:</span>
-            <span class="ml-auto text-white"><input type="number" /></span>
+            <span class="ml-auto text-white">
+              <input type="text" id="amountInput" placeholder="Amount in Matic"
+            /></span>
           </div>
           <div class="flex">
             <span class="title-font font-medium text-2xl text-white"
@@ -217,6 +64,7 @@ content %}
             >
             <button
               class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              onclick="MintNFT()"
             >
               Fund
             </button>
@@ -239,7 +87,7 @@ content %}
           </div>
         </div>
         <img
-          class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded py-10"
+          class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded lg:p-20 sm:p-0 p-0;"
           src="{{project[3]}}"
           alt="BlockFund Placeholder"
           onerror="this.onerror=null; this.src='../static/images/randomlogo5.png';"
@@ -247,7 +95,124 @@ content %}
       </div>
     </div>
   </section>
-  <br />
+  <br /><br />
   {% endfor %}
 </div>
+<script src="contract.js"></script>
+<script>
+  var accounts;
+  var myContract;
+  async function CheckMetamaskConnection() {
+    if (window.ethereum) {
+      try {
+        web3 = new Web3(window.ethereum);
+        accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        console.log("Done!");
+        return true;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    } else {
+      console.log("Metamask Not Found!");
+      return false;
+    }
+  }
+
+  $(document).ready(async function () {
+    var IsMetaMask = await CheckMetamaskConnection();
+
+    if (IsMetaMask) {
+      console.log("IsMetaMask = true");
+      myContract = await new web3.eth.Contract(
+        SmartContractABI,
+        SmartContractAddress
+      );
+      console.log(myContract);
+      totalNFTsMinted();
+    } else {
+      alert("Metamask not detected!");
+    }
+  });
+
+  async function totalNFTsMinted() {
+    await myContract.methods.currentTokenId().call(function (err, res) {
+      if (!err) {
+        console.log(res);
+        document.getElementById("totalNFTs").innerHTML =
+          "Total NFTs Minted : " + res;
+      }
+    });
+  }
+
+  async function GetNFT() {
+    var tokenId = document.getElementById("tokenId").value;
+
+    await myContract.methods.tokenURI(tokenId).call(async function (err, res) {
+      if (!err) {
+        console.log(res);
+        JSONResponse = await httpGet(res);
+        JSONResponse = JSON.parse(JSONResponse);
+        console.log(JSONResponse);
+        document.getElementById("nftpng").src = JSONResponse["image"];
+        document.getElementById("nftname").innerHTML =
+          "Name : " + JSONResponse["name"];
+        getNFTOwner(tokenId);
+      } else {
+        console.log(err);
+      }
+    });
+  }
+
+  async function getNFTOwner(_tokenId) {
+    await myContract.methods.ownerOf(_tokenId).call(function (err, res) {
+      if (!err) {
+        console.log(res);
+        document.getElementById("nftowner").innerHTML = "Owner : " + res;
+      }
+    });
+  }
+
+  async function MintNFT() {
+    var amountInput = document.getElementById("amountInput").value;
+    const amountToSend = web3.utils.toWei(amountInput, "ether");
+
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const sender = accounts[0];
+
+      const result = await myContract.methods
+        .mintNFT()
+        .send({ from: sender, value: amountToSend });
+      console.log("Transaction hash:", result.transactionHash);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  async function TransferNFT() {
+    var toAddress = document.getElementById("toAddress").value;
+    var tokenId = document.getElementById("tokenId").value;
+    await myContract.methods
+      .transferFrom(accounts[0], toAddress, tokenId)
+      .send({ from: accounts[0] }, function (err, res) {
+        if (!err) {
+          console.log(res);
+        } else {
+          console.log(err);
+        }
+      });
+  }
+
+  function httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false); // false for synchronous request
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+  }
+</script>
 {% endblock %}
