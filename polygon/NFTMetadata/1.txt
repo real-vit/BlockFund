@@ -1,4 +1,0 @@
-{
-    "image" : "https://raw.githubusercontent.com/real-vit/BlockFund/main/polygon/NFTMetadata/BlockFund.png",
-    "name" : "BlockFund Collectible"
-}
