@@ -26,9 +26,9 @@ content %}
   </div>
   {% for project in projects %}
   <section
-    class="text-gray-400 bg-semi-dark bg-opacity-40 body-font overflow-hidden"
+    class="text-gray-400 bg-semi-dark bg-opacity-25 body-font overflow-hidden"
   >
-    <div class="container px-5 py-0 mx-auto">
+    <div class="container px-5 py-12 mx-auto">
       <div class="lg:w-4/5 mx-auto flex flex-wrap">
         <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
           <h2 class="text-sm title-font text-gray-500 tracking-widest">
@@ -54,7 +54,7 @@ content %}
           </div>
           <div class="flex border-t border-b mb-6 border-gray-800 py-2">
             <span class="text-gray-500">Amount of Matic:</span>
-            <span class="ml-auto text-white">
+            <span class="ml-auto text-dark">
               <input type="text" id="amountInput" placeholder="Amount in Matic"
             /></span>
           </div>
@@ -98,7 +98,7 @@ content %}
   <br /><br />
   {% endfor %}
 </div>
-<script src="contract.js"></script>
+<script src="{{ url_for('static', filename='contract.js') }}"></script>
 <script>
   var accounts;
   var myContract;
