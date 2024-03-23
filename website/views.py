@@ -107,3 +107,6 @@ def previewnft():
 @views.route("/blockfundai")
 def blockfundai():
     return render_template("ai.html")
+@views.route("/voting")
+def voting():
+    return render_template("voting.html", user=current_user)

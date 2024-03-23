@@ -54,13 +54,15 @@ content %}
       <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-white" id="nftname"></h1>
       <p class="leading-relaxed mb-8" id="nftowner"></p>
       <div class="flex justify-center">
-        <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Claim DAO Tokens</button>
+        <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" onclick="claimDaoTokens()">Claim DAO Tokens</button>
       </div>
     </div>
   </div>
 </section>
 </section>
 <script src="{{ url_for('static', filename='contract.js') }}"></script>
+<script src="{{ url_for('static', filename='votingContract.js') }}"></script>
+
 <script>
   var accounts;
   var myContract;
@@ -91,6 +93,10 @@ content %}
       myContract = await new web3.eth.Contract(
         SmartContractABI,
         SmartContractAddress
+      );
+      votingContract = await new web3.eth.Contract(
+        VotingContractABI,
+        VotingContractAddress
       );
       console.log(myContract);
       totalNFTsMinted();
@@ -137,6 +143,21 @@ content %}
       }
     });
   }
+  async function claimDaoTokens() {
+  try {
+    const sender = accounts[0];
+    const amountToMint = "1"; 
+
+    const amountInWei = web3.utils.toWei(amountToMint, "ether");
+
+    await votingContract.methods.mint(sender, amountInWei)
+      .send({ from: sender });
+
+    console.log("DAO tokens claimed:", amountToMint, "BFT");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 
   async function MintNFT() {
     var amountInput = document.getElementById("amountInput").value;

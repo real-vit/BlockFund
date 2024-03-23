@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+          integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        ></script>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"
+          integrity="sha512-vtUOC0YIaNm/UutU7yfnwqnF9LOYnXtpHe2kwi1nvJNloeGQuncNBiEKP/3Ww3D62USAhbXGsnYpAYoiDsa+wA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        ></script>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+      </head>
+<body>
+  <div>
+    <h2>Should we consider implementing the current solution on the polygon network?</h2>
+    <button onclick="answerYes()">Yes</button>
+    <button onclick="answerNo()">No</button>
+  </div>
+    <div>
+        <h3>Vote Tally</h3>
+        <p>Yes: <span id="yesCount">0</span></p>
+        <p>No: <span id="noCount">0</span></p>
+    </div>
+  <script src="{{ url_for('static', filename='contract.js') }}"></script>
+  <script src="{{ url_for('static', filename='votingContract.js') }}"></script>
+  <script>
+    var accounts;
+    var myContract;
+    async function CheckMetamaskConnection() {
+      if (window.ethereum) {
+        try {
+          web3 = new Web3(window.ethereum);
+          accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          console.log("Done!");
+          return true;
+        } catch (err) {
+          console.log(err);
+          return false;
+        }
+      } else {
+        console.log("Metamask Not Found!");
+        return false;
+      }
+    }
+  
+    $(document).ready(async function () {
+      var IsMetaMask = await CheckMetamaskConnection();
+  
+      if (IsMetaMask) {
+        console.log("IsMetaMask = true");
+        votingContract = await new web3.eth.Contract(
+          VotingContractABI,
+          VotingContractAddress
+        );
+        console.log(myContract);
+        totalNFTsMinted();
+        updateVoteTally();
+      } else {
+        alert("Metamask not detected!");
+      }
+    });
+  
+    async function totalNFTsMinted() {
+      await myContract.methods.currentTokenId().call(function (err, res) {
+        if (!err) {
+          console.log(res);
+          document.getElementById("totalNFTs").innerHTML =
+            "Total NFTs Minted : " + res;
+        }
+      });
+    }
+  
+    async function GetNFT() {
+      var tokenId = document.getElementById("tokenId").value;
+  
+      await myContract.methods.tokenURI(tokenId).call(async function (err, res) {
+        if (!err) {
+          console.log(res);
+          JSONResponse = await httpGet(res);
+          JSONResponse = JSON.parse(JSONResponse);
+          console.log(JSONResponse);
+          document.getElementById("nftpng").src = JSONResponse["image"];
+          document.getElementById("nftname").innerHTML =
+            "Name : " + JSONResponse["name"];
+          getNFTOwner(tokenId);
+          document.getElementById("result").style.visibility="visible";
+        } else {
+          console.log(err);
+        }
+      });
+    }
+  
+    async function getNFTOwner(_tokenId) {
+      await myContract.methods.ownerOf(_tokenId).call(function (err, res) {
+        if (!err) {
+          console.log(res);
+          document.getElementById("nftowner").innerHTML = "Owner : " + res;
+        }
+      });
+    }
+
+    async function answerYes() {
+        try {
+          await votingContract.methods.vote(1).send({ from: accounts[0] });
+          console.log("Voted 'Yes'");
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error voting: " + error.message);
+        }
+    }
+
+    async function answerNo() {
+        try {
+          await votingContract.methods.vote(2).send({ from: accounts[0] });
+          console.log("Voted 'No'");
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error voting: " + error.message);
+        }
+    }
+
+    async function claimDaoTokens() {
+    try {
+      const sender = accounts[0];
+      const amountToMint = "1"; 
+  
+      const amountInWei = web3.utils.toWei(amountToMint, "ether");
+  
+      await votingContract.methods.mint(sender, amountInWei)
+        .send({ from: sender });
+  
+      console.log("DAO tokens claimed:", amountToMint, "BFT");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+    async function updateVoteTally() {
+    try {
+        const voteCountYes = await votingContract.methods.getVoteCount(1).call();
+        const voteCountNo = await votingContract.methods.getVoteCount(2).call();
+
+        const decimals = 18; // BFT has 18 decimals
+        const voteCountYesFormatted = voteCountYes / (10 ** decimals);
+        const voteCountNoFormatted = voteCountNo / (10 ** decimals);
+
+        document.getElementById("yesCount").textContent = voteCountYes;
+        document.getElementById("noCount").textContent = voteCountNo;
+    } catch (error) {
+        console.error("Error updating vote tally:", error);
+    }
+    }
+
+  
+    async function MintNFT() {
+      var amountInput = document.getElementById("amountInput").value;
+      const amountToSend = web3.utils.toWei(amountInput, "ether");
+  
+      try {
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const sender = accounts[0];
+  
+        const result = await myContract.methods
+          .mintNFT()
+          .send({ from: sender, value: amountToSend });
+        console.log("Transaction hash:", result.transactionHash);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  
+    async function TransferNFT() {
+      var toAddress = document.getElementById("toAddress").value;
+      var tokenId = document.getElementById("tokenId").value;
+      await myContract.methods
+        .transferFrom(accounts[0], toAddress, tokenId)
+        .send({ from: accounts[0] }, function (err, res) {
+          if (!err) {
+            console.log(res);
+          } else {
+            console.log(err);
+          }
+        });
+    }
+  
+    function httpGet(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", theUrl, false); // false for synchronous request
+      xmlHttp.send(null);
+      return xmlHttp.responseText;
+    }
+  </script>
+</body>
+</html>
